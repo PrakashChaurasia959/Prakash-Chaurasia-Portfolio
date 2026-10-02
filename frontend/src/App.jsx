@@ -259,7 +259,7 @@ function Footer() {
 
 function PublicPortfolioPage({ profile, projects, experience, education, certificates, skills, siteSettings, theme, onToggleTheme, setToast }) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [formData, setFormData] = useState({ name: '', email: '', message: '' });
+  const [formData, setFormData] = useState({ name: '', email: '', subject: '', message: '' });
   const [submitting, setSubmitting] = useState(false);
   const [activeSection, setActiveSection] = useState('home');
   const [showBackToTop, setShowBackToTop] = useState(false);
@@ -299,8 +299,8 @@ function PublicPortfolioPage({ profile, projects, experience, education, certifi
   const handleContactSubmit = async (event) => {
     event.preventDefault();
 
-    if (!formData.name.trim() || !formData.email.trim() || !formData.message.trim()) {
-      setToast({ type: 'error', text: 'Please complete name, email and message fields.' });
+    if (!formData.name.trim() || !formData.email.trim() || !formData.subject.trim() || !formData.message.trim()) {
+      setToast({ type: 'error', text: 'Please complete name, email, subject, and message fields.' });
       return;
     }
 
@@ -320,10 +320,10 @@ function PublicPortfolioPage({ profile, projects, experience, education, certifi
       await createMessage({
         name: formData.name.trim(),
         email: formData.email.trim(),
-        subject: 'Portfolio inquiry',
+        subject: formData.subject.trim(),
         message: formData.message.trim(),
       });
-      setFormData({ name: '', email: '', message: '' });
+      setFormData({ name: '', email: '', subject: '', message: '' });
       setToast({ type: 'success', text: 'Your message has been sent successfully.' });
     } catch (error) {
       setToast({ type: 'error', text: error.message || 'Unable to send message.' });
@@ -585,15 +585,21 @@ function PublicPortfolioPage({ profile, projects, experience, education, certifi
 
         <section className="section alt-section">
           <div className="container">
-            <div className="favorite-song-card">
+            <a
+              href="https://youtu.be/BiVyN2ftrrs?si=gbLUc3RaZfaHjYTe"
+              target="_blank"
+              rel="noreferrer"
+              className="favorite-song-card"
+              aria-label="Open my favorite song on YouTube"
+            >
               <div className="song-badge">
                 <Music4 size={18} />
               </div>
               <div>
-                <span className="eyebrow">Favorite Song</span>
+                <span className="eyebrow">My Favorite Song 🎵</span>
                 <h3>Mera Intkam Dekhegi</h3>
               </div>
-            </div>
+            </a>
           </div>
         </section>
 
@@ -638,6 +644,10 @@ function PublicPortfolioPage({ profile, projects, experience, education, certifi
               <div className="field-group">
                 <label htmlFor="email">Email</label>
                 <input id="email" name="email" type="email" value={formData.email} onChange={handleInputChange} required aria-label="Email" />
+              </div>
+              <div className="field-group">
+                <label htmlFor="subject">Subject</label>
+                <input id="subject" name="subject" type="text" value={formData.subject} onChange={handleInputChange} required aria-label="Subject" />
               </div>
               <div className="field-group">
                 <label htmlFor="message">Message</label>

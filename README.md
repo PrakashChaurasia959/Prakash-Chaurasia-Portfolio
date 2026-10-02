@@ -8,6 +8,7 @@ This portfolio uses Supabase for portfolio data, admin authentication, and file 
 - Supabase-backed profile, project, experience, education, skills, certificates, and settings data.
 - Supabase Auth used for admin login/logout.
 - Resume uploads stored in a Supabase Storage bucket.
+- No custom backend database or JWT system is used.
 
 ## Tech Stack
 
@@ -18,11 +19,6 @@ Frontend
 - CSS
 - Supabase client
 
-Backend
-- Node.js
-- Express health server
-- Supabase-managed persistence and auth
-
 ## Project Structure
 
 ```text
@@ -32,18 +28,14 @@ Prakash-Chaurasia-Portfolio/
 │   ├── public/
 │   ├── package.json
 │   ├── vite.config.js
+│   ├── .env
 │   ├── .env.example
 │   └── .env.local
-├── backend/
-│   ├── server.js
-│   ├── .env.example
-│   └── package.json
 ├── supabase/
 │   ├── schema.sql
 │   └── seed.sql
 ├── SUPABASE_SETUP.md
 ├── README.md
-├── .env.example
 ├── .gitignore
 └── package.json
 ```
@@ -51,35 +43,23 @@ Prakash-Chaurasia-Portfolio/
 ## Supabase setup
 
 1. Create a Supabase project.
-2. Copy the project URL and anonymous key into `frontend/.env.local`.
+2. Copy the project URL and publishable key into `frontend/.env`.
 3. Run the SQL from `supabase/schema.sql` in the Supabase SQL editor.
 4. Run `supabase/seed.sql` to load the default portfolio data.
-5. Create a Storage bucket named `resumes` and make it public.
-6. Create a matching admin user in Supabase Auth, then insert its auth UID into `public.admin_users`.
+5. Create storage buckets such as `resumes` and `profile-images` as needed.
+6. Create a matching admin user in Supabase Auth, then insert the auth UID into `public.admin_users`.
 
 Example frontend env:
 
 ```env
 VITE_SUPABASE_URL=https://your-project-ref.supabase.co
-VITE_SUPABASE_ANON_KEY=your-anon-key
+VITE_SUPABASE_PUBLISHABLE_KEY=your-publishable-key
 ```
 
 ## Local development
 
-### Frontend
-
 ```bash
 cd frontend
-npm install
-npm run dev
-```
-
-### Backend
-
-The backend is a lightweight Express health server and is only kept to avoid the old application wiring. The real data and auth live in Supabase.
-
-```bash
-cd backend
 npm install
 npm run dev
 ```
@@ -92,9 +72,9 @@ The admin dashboard is protected by Supabase session state and secure RLS polici
 
 ## Security notes
 
-- Never commit `.env` or `.env.local` files.
-- Keep Supabase keys in environment variables only.
-- Only the service-role key should be kept server-side.
+- Never commit `.env` files.
+- Keep the publishable key in environment variables only.
+- Never use a service role or secret key in the frontend.
 - Use RLS policies in Supabase for admin-only writes.
 
 For the exact database and RLS setup, see [SUPABASE_SETUP.md](SUPABASE_SETUP.md).
