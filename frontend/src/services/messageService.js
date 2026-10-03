@@ -1,4 +1,4 @@
-import { supabase } from '../lib/supabase';
+import { supabase } from './api';
 
 export async function getMessages() {
   if (!supabase) return [];
