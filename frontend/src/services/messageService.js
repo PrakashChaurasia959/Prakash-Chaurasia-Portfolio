@@ -1,3 +1,4 @@
+import emailjs from '@emailjs/browser';
 import { supabase } from './api';
 
 export async function getMessages() {
@@ -27,6 +28,23 @@ export async function createMessage(payload) {
     });
 
   if (error) throw error;
+
+  // Send email notification through EmailJS
+  try {
+    await emailjs.send(
+      import.meta.env.VITE_EMAILJS_SERVICE_ID,
+      import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
+      {
+        name: payload.name,
+        email: payload.email,
+        message: payload.message,
+        title: payload.subject || 'Portfolio enquiry',
+      },
+      import.meta.env.VITE_EMAILJS_PUBLIC_KEY
+    );
+  } catch (emailError) {
+    console.error('EmailJS notification failed:', emailError);
+  }
 
   return true;
 }
